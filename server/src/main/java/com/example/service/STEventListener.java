@@ -115,12 +115,14 @@ public class STEventListener implements SerialPortEventListener {
 								locationRepository.save(beacon);
 								LocalDateTime currentDate = LocalDateTime.now();
 								List<Beacon> beacons = locationRepository.findAll();
-								for(Beacon enreg : beacons)
-								{
-									long seconds = ChronoUnit.SECONDS.between(enreg.getReceivedDate(), currentDate);
-									if(seconds > 20)
+								if(beacons.size()>0){
+									for(Beacon enreg : beacons)
 									{
-										locationRepository.delete(enreg);
+										long seconds = ChronoUnit.SECONDS.between(enreg.getReceivedDate(), currentDate);
+										if(seconds > 20)
+										{
+											locationRepository.delete(enreg);
+										}
 									}
 								}
 							} catch(RuntimeException e){

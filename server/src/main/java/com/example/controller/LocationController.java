@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.util.List;
+
 import org.geojson.GeoJsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Beacon;
+import com.example.domain.LocationHistory;
 import com.example.domain.Measurement;
+import com.example.repository.LocationHistoryRepository;
 import com.example.repository.LocationRepository;
 import com.example.service.LocationService;
 
@@ -20,12 +24,21 @@ public class LocationController {
 
 	@Autowired
 	private LocationRepository locationRepository;
+	
+	@Autowired
+	private LocationHistoryRepository locationRepositoryHistory;
+
 
 	@RequestMapping(value = "/{deviceId}/location")
 	public GeoJsonObject getDevicePosition(@PathVariable String deviceId) {
 
 		return locationService.getDevicePosition(deviceId);
 
+	}
+	@RequestMapping(value = "/{deviceId}/history")
+	public List<LocationHistory> getDevicePositionHistory(@PathVariable String deviceId)
+	{
+		return locationService.getDeviceHistory(deviceId);
 	}
 
 	@RequestMapping("test")

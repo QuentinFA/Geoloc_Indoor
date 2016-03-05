@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @Entity
 public class Beacon {
 	/**
-	 * Idenetification of the beacon
+	 * Identification of the beacon
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

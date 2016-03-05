@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.geojson.GeoJsonObject;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.domain.Beacon;
+import com.example.domain.LocationHistory;
+import com.example.repository.LocationHistoryRepository;
 import com.example.repository.LocationRepository;
 
 @Component
@@ -16,6 +20,9 @@ public class LocationService {
 
 	@Autowired
 	private LocationRepository locationRepository;
+	
+	@Autowired
+	private LocationHistoryRepository locationRepositoryHistory;
 
 	
 	public GeoJsonObject getDevicePosition(String deviceId){
@@ -38,8 +45,17 @@ public class LocationService {
 		
 		LngLatAlt devicePosition = new LngLatAlt(longitude, latitude);
 		GeoJsonObject object = new Point(devicePosition);
-		
+		LocationHistory locationHistory = new LocationHistory();
+		locationHistory.setDeviceId(deviceId);
+		locationHistory.setDate(LocalDateTime.now());
+		locationHistory.setLatitude(latitude);
+		locationHistory.setLongitude(longitude);
+		locationRepositoryHistory.save(locationHistory);
 		return object;
 		
+	}
+	public List<LocationHistory> getDeviceHistory(String deviceId){
+		return locationRepositoryHistory.findByDeviceId(deviceId);
+
 	}
 }
