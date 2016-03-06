@@ -8,6 +8,10 @@ import org.geojson.GeoJsonObject;
 import org.geojson.LngLatAlt;
 import org.geojson.Point;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.example.domain.Beacon;
@@ -51,11 +55,14 @@ public class LocationService {
 		locationHistory.setLatitude(latitude);
 		locationHistory.setLongitude(longitude);
 		locationRepositoryHistory.save(locationHistory);
+		System.out.println("SAVED !\n");
 		return object;
 		
 	}
-	public List<LocationHistory> getDeviceHistory(String deviceId){
-		return locationRepositoryHistory.findByDeviceId(deviceId);
+	public List<LocationHistory> getDeviceHistory(String deviceId,int page, int size){
+		final PageRequest page1 = new PageRequest(
+				page, size, Direction.DESC, "date");
+		return locationRepositoryHistory.findByDeviceId(deviceId, page1);
 
 	}
 }
