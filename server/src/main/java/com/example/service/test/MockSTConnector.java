@@ -17,7 +17,7 @@ import com.example.domain.Measurement;
 import com.example.repository.LocationRepository;
 import com.example.service.STEventListener;
 
-@Component
+//@Component
 public class MockSTConnector {
 
 	@Autowired
