@@ -1,12 +1,17 @@
 package com.example.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
+import com.example.serializer.LocalDateTimeDeserializer;
+import com.example.serializer.LocalDateTimeSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Class which represents a Beacon, which is inplemented by a STM32 or an
@@ -21,10 +26,15 @@ public class Beacon {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@NotNull
 	private String deviceId;
 
+	@NotNull
 	private String idPlaca;
 	
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@NotNull
 	private LocalDateTime receivedDate;
 	
 	public LocalDateTime getReceivedDate() {
@@ -38,6 +48,7 @@ public class Beacon {
 	/**
 	 * Position of the beacon TODO : Which kind of object ?
 	 */
+	@NotNull
 	private Measurement measurement;
 
 	/*

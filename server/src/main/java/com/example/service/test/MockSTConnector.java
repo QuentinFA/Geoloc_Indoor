@@ -1,27 +1,23 @@
 package com.example.service.test;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.PostConstruct;
-
-import jssc.SerialPort;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.domain.Beacon;
 import com.example.domain.Measurement;
-import com.example.repository.LocationRepository;
-import com.example.service.STEventListener;
+import com.example.service.AmazonService;
 
-//@Component
+// TODO Remove @Component when using real devices
+@Component
 public class MockSTConnector {
 
 	@Autowired
-	private LocationRepository locationRepository;
+	private AmazonService amazonService;
 	
 	@PostConstruct
 	public void init(){
@@ -73,17 +69,8 @@ public class MockSTConnector {
 				
 				Beacon beacon = convertStringToBeacon(parts, idPlaca);
 				beacon.setReceivedDate(LocalDateTime.now());
-				locationRepository.save(beacon);
-				LocalDateTime currentDate = LocalDateTime.now();
-				List<Beacon> beacons = locationRepository.findByDeviceId(deviceId);
-				for(Beacon enreg : beacons)
-				{
-					long seconds = ChronoUnit.SECONDS.between(enreg.getReceivedDate(), currentDate);
-					if(seconds > 20)
-					{
-						locationRepository.delete(enreg);
-					}
-			}
+				amazonService.sendBeacon(beacon);
+				
 			}
 			
 			

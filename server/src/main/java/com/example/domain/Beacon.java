@@ -8,6 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.example.serializer.LocalDateTimeDeserializer;
+import com.example.serializer.LocalDateTimeSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 /**
  * Class which represents a Beacon, which is inplemented by a STM32 or an
  * Arduino
@@ -25,6 +30,8 @@ public class Beacon {
 
 	private String idPlaca;
 	
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime receivedDate;
 	
 	public LocalDateTime getReceivedDate() {

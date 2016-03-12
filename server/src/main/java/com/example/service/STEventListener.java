@@ -2,7 +2,6 @@ package com.example.service;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,20 +13,19 @@ import jssc.SerialPortException;
 
 import com.example.domain.Beacon;
 import com.example.domain.Measurement;
-import com.example.repository.LocationRepository;
 
 public class STEventListener implements SerialPortEventListener {
 
 	private SerialPort port;
-	private LocationRepository locationRepository;
+	private AmazonService amazonService;
 	
 	
 	private boolean receivedMessage = false;
 	StringBuilder message = new StringBuilder();
 
-	public STEventListener(SerialPort port, LocationRepository locationRepository) {
+	public STEventListener(SerialPort port, AmazonService amazonService) {
 		this.port = port;
-		this.locationRepository = locationRepository;
+		this.amazonService = amazonService;
 	}
 	
 	
@@ -112,19 +110,9 @@ public class STEventListener implements SerialPortEventListener {
 							try{
 								Beacon beacon = convertStringToBeacon(parts);
 								beacon.setReceivedDate(LocalDateTime.now());
-								locationRepository.save(beacon);
-								LocalDateTime currentDate = LocalDateTime.now();
-								List<Beacon> beacons = locationRepository.findAll();
-								if(beacons.size()>0){
-									for(Beacon enreg : beacons)
-									{
-										long seconds = ChronoUnit.SECONDS.between(enreg.getReceivedDate(), currentDate);
-										if(seconds > 20)
-										{
-											locationRepository.delete(enreg);
-										}
-									}
-								}
+								amazonService.sendBeacon(beacon);
+								
+								
 							} catch(RuntimeException e){
 								System.out.println(e);
 							}

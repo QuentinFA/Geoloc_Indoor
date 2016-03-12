@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.domain.Beacon;
 import com.example.domain.LocationHistory;
 import com.example.service.LocationService;
 
@@ -22,12 +23,20 @@ public class LocationController {
 	@Autowired
 	private LocationService locationService;
 
+	/*
 	@RequestMapping(value = "/{deviceId}/location", method = RequestMethod.POST)
 	public LocationHistory addDeviceLocation(@PathVariable String deviceId,
 			@RequestBody @Valid LocationHistory location) {
 		return locationService.addDeviceLocation(deviceId, location);
 	}
-
+	*/
+	
+	@RequestMapping(value = "/{deviceId}/location", method = RequestMethod.POST)
+	public Beacon addBeaconInformation(@PathVariable String deviceId,
+			@RequestBody @Valid Beacon beacon) {
+		return locationService.addBeaconInformation(beacon);
+	}
+	
 	@RequestMapping(value = "/{deviceId}/history",  method = RequestMethod.GET)
 	public List<LocationHistory> getDevicePositionHistory(
 			@PathVariable String deviceId, 

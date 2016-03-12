@@ -2,6 +2,8 @@ package com.example.domain;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 public class Measurement implements Serializable{
 
 	/**
@@ -9,8 +11,10 @@ public class Measurement implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@NotNull
 	private double someValue;
 	
+	@NotNull
 	private double anotherValue;
 
 	public double getSomeValue() {

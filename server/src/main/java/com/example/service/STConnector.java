@@ -6,15 +6,13 @@ import jssc.SerialPort;
 import jssc.SerialPortException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import com.example.repository.LocationRepository;
-
+//TODO Uncomment @Component when using real devices
 //@Component
 public class STConnector {
 
 	@Autowired
-	private LocationRepository locationRepository;
+	private AmazonService amazonService;
 	
 
 	@PostConstruct
@@ -26,7 +24,7 @@ public class STConnector {
 	public boolean connect(String portName) {
 
 		SerialPort port = SerialConnector.connect(portName);
-		STEventListener listener = new STEventListener(port, locationRepository);
+		STEventListener listener = new STEventListener(port, amazonService);
 
 		try {
 			port.addEventListener(listener);
