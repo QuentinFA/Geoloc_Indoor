@@ -72,8 +72,8 @@ public class STEventListener implements SerialPortEventListener {
 		double lat = Double.parseDouble(parts[3]);
 		
 		Measurement m = new Measurement();
-		m.setAnotherValue(longitude);
-		m.setSomeValue(lat);
+		m.setLongitude(longitude);
+		m.setLatitude(lat);
 		
 		beacon.setIdPlaca(port.getPortName());
 		beacon.setMeasurement(m);

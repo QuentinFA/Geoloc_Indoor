@@ -12,26 +12,24 @@ public class Measurement implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	private double someValue;
+	private double latitude;
 	
 	@NotNull
-	private double anotherValue;
+	private double longitude;
 
-	public double getSomeValue() {
-		return someValue;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public void setSomeValue(double someValue) {
-		this.someValue = someValue;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
-	public double getAnotherValue() {
-		return anotherValue;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public void setAnotherValue(double anotherValue) {
-		this.anotherValue = anotherValue;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
-	
-	
 }

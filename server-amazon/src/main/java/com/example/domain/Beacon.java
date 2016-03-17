@@ -94,9 +94,5 @@ public class Beacon {
 
 	public void setMeasurement(Measurement measurement) {
 		this.measurement = measurement;
-	}
-
-	
-	
-
+	}	
 }

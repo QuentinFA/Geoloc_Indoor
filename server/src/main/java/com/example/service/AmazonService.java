@@ -31,11 +31,11 @@ public class AmazonService {
 		String url = new String(amazonRoot
 				+ String.format(ADD_LOCATION_URL, beacon.getDeviceId()));
 
-		Beacon resposne =  template.postForObject(url, beacon, Beacon.class);
+		Beacon response =  template.postForObject(url, beacon, Beacon.class);
 		
-		System.out.println("BEACON SENT : " + resposne.getId());
+		System.out.println("BEACON SENT : " + response.getId());
 		
-		return resposne;
+		return response;
 
 	}
 

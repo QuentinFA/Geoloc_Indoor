@@ -39,8 +39,8 @@ public class MockSTConnector {
 		double lat = Double.parseDouble(parts[3]);
 		
 		Measurement m = new Measurement();
-		m.setAnotherValue(longitude);
-		m.setSomeValue(lat);
+		m.setLongitude(longitude);
+		m.setLatitude(lat);
 		
 		beacon.setIdPlaca(id);
 		beacon.setMeasurement(m);
@@ -53,7 +53,7 @@ public class MockSTConnector {
 			
 			while(true){
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(5000);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -78,13 +78,20 @@ public class MockSTConnector {
 	}
 	
 	public boolean connectToThreeDevices(){
-		Thread placa1 = new Thread(simulatePlaca("COM1", "123"));
-		Thread placa2 = new Thread(simulatePlaca("COM2", "123"));
-		Thread placa3 = new Thread(simulatePlaca("COM3", "123"));
+		Thread placa11 = new Thread(simulatePlaca("placa1", "123"));
+		Thread placa21 = new Thread(simulatePlaca("placa2", "123"));
+		Thread placa31 = new Thread(simulatePlaca("placa3", "123"));
 		
-		placa1.start();
-		placa2.start();
-		placa3.start();
+		Thread placa12 = new Thread(simulatePlaca("placa1", "163"));
+		Thread placa22 = new Thread(simulatePlaca("placa2", "163"));
+		Thread placa32 = new Thread(simulatePlaca("placa3", "163"));
+		
+		placa11.start();
+		placa21.start();
+		placa31.start();
+		placa12.start();
+		placa22.start();
+		placa32.start();
 		
 		return true;
 	}
