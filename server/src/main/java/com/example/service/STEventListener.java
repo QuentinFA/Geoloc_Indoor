@@ -61,22 +61,17 @@ public class STEventListener implements SerialPortEventListener {
 
 	public Beacon convertStringToBeacon(String parts[]){
 		
-		if(parts.length !=4){
+		if(parts.length !=3){
 			throw new RuntimeException("Incorrect number of parts");
 		}
 		
 		Beacon beacon = new Beacon();
 		beacon.setDeviceId(parts[1]);
 		
-		double longitude = Double.parseDouble(parts[2]);
-		double lat = Double.parseDouble(parts[3]);
-		
-		Measurement m = new Measurement();
-		m.setLongitude(longitude);
-		m.setLatitude(lat);
+		double signalStrength = Double.parseDouble(parts[2]);
 		
 		beacon.setIdPlaca(port.getPortName());
-		beacon.setMeasurement(m);
+		beacon.setMeasurement(signalStrength);
 		
 		return beacon;
 	}

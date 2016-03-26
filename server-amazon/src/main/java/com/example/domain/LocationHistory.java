@@ -32,6 +32,8 @@ public class LocationHistory {
 	@NotNull
 	private double longitude;
 	
+	@NotNull
+	private int level;
 	
 	public double getLatitude() {
 		return latitude;
@@ -45,7 +47,6 @@ public class LocationHistory {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-
 	
 	public Long getId() {
 		return id;
@@ -64,6 +65,12 @@ public class LocationHistory {
 	}
 	public void setDate(LocalDateTime date) {
 		this.date = date;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
 	}
 	
 	

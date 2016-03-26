@@ -1,12 +1,20 @@
 package com.example.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.geojson.GeoJsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,6 +70,20 @@ public class LocationController {
 			return beacon;
 		}
 		return null;
+	}
+	@RequestMapping(value = "/files/{fileName}", method = RequestMethod.GET)
+	public HttpEntity<byte[]> createPdf(
+	                 @PathVariable("fileName") String fileName) throws IOException {
+		Path path = Paths.get("sample.xml");
+		byte[] documentBody = Files.readAllBytes(path);
+
+	    HttpHeaders header = new HttpHeaders();
+	    header.setContentType(new MediaType("application", "xml"));
+	    header.set("Content-Disposition",
+	                   "attachment; filename=" + fileName.replace(" ", "_"));
+	    header.setContentLength(documentBody.length);
+
+	    return new HttpEntity<byte[]>(documentBody, header);
 	}
 	
 

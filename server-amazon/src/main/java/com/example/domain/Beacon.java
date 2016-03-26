@@ -46,10 +46,10 @@ public class Beacon {
 	}
 
 	/**
-	 * Position of the beacon TODO : Which kind of object ?
+	 * force du signal recu of the beacon TODO : Which kind of object ?
 	 */
 	@NotNull
-	private Measurement measurement;
+	private double measurement;
 
 	/*
 	 * Connection with the beacon
@@ -88,11 +88,11 @@ public class Beacon {
 		this.idPlaca = idPlaca;
 	}
 
-	public Measurement getMeasurement() {
+	public double getMeasurement() {
 		return measurement;
 	}
 
-	public void setMeasurement(Measurement measurement) {
+	public void setMeasurement(double measurement) {
 		this.measurement = measurement;
 	}	
 }

@@ -28,23 +28,17 @@ public class MockSTConnector {
 	
 	public Beacon convertStringToBeacon(String parts[], String id){
 		
-		if(parts.length !=4){
+		if(parts.length !=3){
 			throw new RuntimeException("Incorrect number of parts");
 		}
 		
 		Beacon beacon = new Beacon();
 		beacon.setDeviceId(parts[1]);
 		
-		double longitude = Double.parseDouble(parts[2]);
-		double lat = Double.parseDouble(parts[3]);
-		
-		Measurement m = new Measurement();
-		m.setLongitude(longitude);
-		m.setLatitude(lat);
+		double signalStrength = Double.parseDouble(parts[2]);
 		
 		beacon.setIdPlaca(id);
-		beacon.setMeasurement(m);
-		
+		beacon.setMeasurement(signalStrength);
 		return beacon;
 	}
 	
@@ -59,14 +53,10 @@ public class MockSTConnector {
 					e.printStackTrace();
 				}
 				
-				String value1 = String.valueOf(new Random().nextDouble());
-				String value2 = String.valueOf(new Random().nextDouble());
-				
-				
-				String[] parts = new String[]{"", deviceId , value1, value2};
+				String value1 = String.valueOf(new Random().nextDouble());				
+				String[] parts = new String[]{"", deviceId , value1};
 				
 		
-				
 				Beacon beacon = convertStringToBeacon(parts, idPlaca);
 				beacon.setReceivedDate(LocalDateTime.now());
 				amazonService.sendBeacon(beacon);
@@ -78,13 +68,13 @@ public class MockSTConnector {
 	}
 	
 	public boolean connectToThreeDevices(){
-		Thread placa11 = new Thread(simulatePlaca("placa1", "123"));
-		Thread placa21 = new Thread(simulatePlaca("placa2", "123"));
-		Thread placa31 = new Thread(simulatePlaca("placa3", "123"));
+		Thread placa11 = new Thread(simulatePlaca("placa4", "123"));
+		Thread placa21 = new Thread(simulatePlaca("placa5", "123"));
+		Thread placa31 = new Thread(simulatePlaca("placa6", "123"));
 		
-		Thread placa12 = new Thread(simulatePlaca("placa1", "163"));
-		Thread placa22 = new Thread(simulatePlaca("placa2", "163"));
-		Thread placa32 = new Thread(simulatePlaca("placa3", "163"));
+		Thread placa12 = new Thread(simulatePlaca("placa4", "163"));
+		Thread placa22 = new Thread(simulatePlaca("placa5", "163"));
+		Thread placa32 = new Thread(simulatePlaca("placa6", "163"));
 		
 		placa11.start();
 		placa21.start();

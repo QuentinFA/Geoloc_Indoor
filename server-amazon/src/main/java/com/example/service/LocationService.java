@@ -58,7 +58,7 @@ public class LocationService {
 	
 	public GeoJsonObject getDevicePosition(String deviceId){
 		//prelevation des coordones des balises de la bases de donnees.
-		HashMap<Integer, Integer> levels = new HashMap<Integer,Integer>();
+		HashMap<String, Integer> levels = new HashMap<>();
 		Map<String, LocationSTm> stmLocations = new HashMap<>();
 		List<Beacon> beaconList = locationRepository.findByDeviceId(deviceId); //
 		List<Beacon> calculBeacons = new ArrayList<Beacon>(); //as
@@ -70,9 +70,7 @@ public class LocationService {
 				{
 					calculBeacons.add(enreg);
 					System.out.println("ADDED!");
-					System.out.println("LATITUDINE_FOR :" +enreg.getMeasurement().getLatitude());
-					System.out.println("LONGITUDINE_FOR :"+enreg.getMeasurement().getLongitude());
-					
+					System.out.println("Strength of Signal :" +enreg.getMeasurement());
 					
 				}
 				else
@@ -87,59 +85,62 @@ public class LocationService {
 		{
 			double xStm=0;
 			double yStm=0;
+			int zStm = 0;
 			double coordX=0;
 			double coordY=0;
+			double coordZ=0;
 			double sumLatitude =0;
 			double sumLongitude = 0;
+			double sumLevel = 0;
+			double strength;
+			double SumStrength =0;
+			double altitude = 0;
 			for(Beacon beacon : calculBeacons)
 			{
 				String idSTM = beacon.getIdPlaca();
 				LocationSTm locationSTm = locationSTmRepository.findByidSTm(idSTM);
 				int level = locationSTm.getLevel();
 				stmLocations.put(idSTM, locationSTm);
-				levels.put(level, 1);
+				levels.put(idSTM, level);
 			}
-			
-			if(levels.size() == 1) //si toutes les cartes sont sur le meme etage
-			{  
-				for(Beacon beacon : calculBeacons)
-				{
-					String idSTM = beacon.getIdPlaca();
-					LocationSTm locationSTm = stmLocations.get(idSTM);
-					
-					xStm =locationSTm.getLocation().getLatitude();
-					yStm = locationSTm.getLocation().getLongitude();
-					System.out.println("XStm : "+xStm);
-					System.out.println("YStm : "+yStm);
-					longitude = beacon.getMeasurement().getLongitude();
-					sumLongitude +=longitude;
-					latitude =  beacon.getMeasurement().getLatitude();
-					System.out.println("LATITUDINE :" +latitude);
-					System.out.println("LONGITUDINE :"+longitude);
-					sumLatitude+=latitude;
-					coordX = coordX + (xStm *latitude);
-					coordY = coordY + (yStm * longitude);
-					System.out.println("COORDONATA X din for :"+coordX);
-					System.out.println("COORDONATA Y din for :"+coordY);
-					
-				}
-				coordX = coordX/sumLatitude;
-				coordY = coordY/sumLongitude;
-				System.out.println("COORDONATA X :"+coordX);
-				System.out.println("COORDONATA y :"+coordY);
-				
-			}
-			else
+			/*int noOfLevels = levels.size();
+			if(noOfLevels == 1)
 			{
-				//TODO
 			}
-			LngLatAlt devicePosition = new LngLatAlt(coordX,coordY);
+			*/
+			for(Beacon beacon : calculBeacons)
+			{
+				String idSTM = beacon.getIdPlaca();
+				LocationSTm locationSTm = stmLocations.get(idSTM);
+				
+				xStm =locationSTm.getLocation().getLatitude();
+				yStm = locationSTm.getLocation().getLongitude();
+				zStm = locationSTm.getLevel();
+				System.out.println("XStm : "+xStm);
+				System.out.println("YStm : "+yStm);
+				strength = beacon.getMeasurement();
+				sumLongitude +=strength*xStm;
+				sumLatitude+= strength*yStm;
+				sumLevel += strength*zStm;
+				SumStrength += strength;
+			}
+			coordX = sumLatitude/SumStrength;
+			coordY = sumLongitude/SumStrength;
+			coordZ = sumLevel/SumStrength;
+			altitude = Math.floor(coordZ);
+			System.out.println("COORDONATA X : " + coordX);
+			System.out.println("COORDONATA y : " + coordY);
+			System.out.println("Coordonnee z : " + coordZ);
+				
+			
+			LngLatAlt devicePosition = new LngLatAlt(coordX,coordY,altitude); //TODO addLeve
 			GeoJsonObject object = new Point(devicePosition);
 			LocationHistory locationHistory = new LocationHistory();
 			locationHistory.setDeviceId(deviceId);
 			locationHistory.setDate(LocalDateTime.now());
 			locationHistory.setLatitude(latitude);
 			locationHistory.setLongitude(longitude);
+			locationHistory.setLatitude(altitude);
 			locationRepositoryHistory.save(locationHistory);
 			System.out.println("SAVED !\n");
 			for(Beacon b : calculBeacons){
