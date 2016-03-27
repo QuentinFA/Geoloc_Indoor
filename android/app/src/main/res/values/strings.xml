@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Rest</string>
+    <string name="id_label">ID :</string>
+    <string name="id_value">[id]</string>
+    <string name="deviceId_label">Device id : </string>
+    <string name="deviceId_value">[deviceId]</string>
+    <string name="date_label">Date : "</string>
+    <string name="date_value">[date]</string>
+    <string name="latitude_label">Latitude : </string>
+    <string name="latitude_value">[latitude]</string>
+    <string name="longitude_label">Longitude : </string>
+    <string name="longitude_value">[longitude]</string>
+    <string name="level_label">Level : </string>
+    <string name="level_value">[level]</string>
+    <string name="action_refresh">Refresh</string>
+</resources>
