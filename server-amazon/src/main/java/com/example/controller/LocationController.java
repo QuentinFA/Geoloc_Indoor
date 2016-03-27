@@ -62,9 +62,9 @@ public class LocationController {
 	}
 	
 	@RequestMapping(value = "/{deviceId}/locationFin", method = RequestMethod.GET)
-	public GeoJsonObject getSTmLocation(@PathVariable String deviceId)
+	public LocationHistory getSTmLocation(@PathVariable String deviceId)
 	{
-		GeoJsonObject beacon = locationService.getDevicePosition(deviceId);
+		LocationHistory beacon = locationService.getDevicePosition(deviceId);
 		if(beacon !=null)
 		{
 			return beacon;

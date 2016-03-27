@@ -56,7 +56,7 @@ public class LocationService {
 
 	}
 	
-	public GeoJsonObject getDevicePosition(String deviceId){
+	public LocationHistory getDevicePosition(String deviceId){
 		//prelevation des coordones des balises de la bases de donnees.
 		HashMap<String, Integer> levels = new HashMap<>();
 		Map<String, LocationSTm> stmLocations = new HashMap<>();
@@ -133,14 +133,14 @@ public class LocationService {
 			System.out.println("Coordonnee z : " + coordZ);
 				
 			
-			LngLatAlt devicePosition = new LngLatAlt(coordX,coordY,altitude); //TODO addLeve
-			GeoJsonObject object = new Point(devicePosition);
+			//LngLatAlt devicePosition = new LngLatAlt(coordX,coordY,altitude); //TODO addLeve
+			//GeoJsonObject object = new Point(devicePosition);
 			LocationHistory locationHistory = new LocationHistory();
 			locationHistory.setDeviceId(deviceId);
 			locationHistory.setDate(LocalDateTime.now());
-			locationHistory.setLatitude(latitude);
-			locationHistory.setLongitude(longitude);
-			locationHistory.setLatitude(altitude);
+			locationHistory.setLatitude(coordX);
+			locationHistory.setLongitude(coordY);
+			locationHistory.setLevel((int)altitude);
 			locationRepositoryHistory.save(locationHistory);
 			System.out.println("SAVED !\n");
 			for(Beacon b : calculBeacons){
@@ -148,7 +148,7 @@ public class LocationService {
 				locationRepository.delete(b);
 			}
 			
-			return object;
+			return locationHistory;
 
 			
 		}
