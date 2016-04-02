@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +45,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.imag.air.geolocindoor.domain.BeaconId;
+import fr.imag.air.geolocindoor.domain.LocationHistory;
+import fr.imag.air.geolocindoor.service.AmazonService;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
    /**
@@ -57,16 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     * A boolean to hide/show all markes
     */
    private boolean beaconOverlayVisible;
-
-   /**
-    * Server URL
-    */
-   public static final String SERVER_URL = "http://ec2-52-58-8-165.eu-central-1.compute.amazonaws.com:8080/";
-
-   /**
-    * Server URL to get the Beacon list
-    */
-   public static final String SERVER_BEACON_LIST = "http://ec2-52-58-8-165.eu-central-1.compute.amazonaws.com:8080/devices/listBeacons";
 
    /**
     * URL of the Air Lab
@@ -300,9 +293,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       @Override
       protected List<BeaconId> doInBackground(String... params) {
          try {
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            List<BeaconId> location = Arrays.asList(restTemplate.getForObject(SERVER_BEACON_LIST, BeaconId[].class));
+            List<BeaconId> location = AmazonService.getDeviceList();
             return location;
          } catch (Exception e) {
             return null;
