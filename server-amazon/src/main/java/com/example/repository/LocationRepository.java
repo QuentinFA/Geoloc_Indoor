@@ -8,7 +8,7 @@ import com.example.domain.Beacon;
 
 public interface LocationRepository extends CrudRepository<Beacon, Long> {
 
-	List<Beacon> findByDeviceId(String deviceId);
+	List<Beacon> findByDeviceId(double deviceId);
 	void deleteAll();
 	void delete(Beacon b);
 	//void delete(long id);

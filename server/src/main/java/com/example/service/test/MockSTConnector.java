@@ -2,6 +2,7 @@ package com.example.service.test;
 
 import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
@@ -13,7 +14,7 @@ import com.example.domain.Measurement;
 import com.example.service.AmazonService;
 
 // TODO Remove @Component when using real devices
-@Component
+//@Component
 public class MockSTConnector {
 
 	@Autowired
@@ -28,12 +29,14 @@ public class MockSTConnector {
 	
 	public Beacon convertStringToBeacon(String parts[], String id){
 		
-		if(parts.length !=3){
+		if(parts.length !=4){
 			throw new RuntimeException("Incorrect number of parts");
 		}
 		
 		Beacon beacon = new Beacon();
-		beacon.setDeviceId(parts[1]);
+		double value = Double.parseDouble(parts[1]);
+		beacon.setDeviceId(value);
+		beacon.setNameOfDevice(parts[3]);
 		
 		double signalStrength = Double.parseDouble(parts[2]);
 		
@@ -53,8 +56,9 @@ public class MockSTConnector {
 					e.printStackTrace();
 				}
 				
-				String value1 = String.valueOf(new Random().nextDouble());				
-				String[] parts = new String[]{"", deviceId , value1};
+				String value1 = String.valueOf(new Random().nextDouble());	
+				String value2 = UUID.randomUUID().toString();
+				String[] parts = new String[]{"", deviceId , value1,value2};
 				
 		
 				Beacon beacon = convertStringToBeacon(parts, idPlaca);

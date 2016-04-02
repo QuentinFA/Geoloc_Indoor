@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
@@ -28,50 +29,23 @@ public class STEventListener implements SerialPortEventListener {
 		this.amazonService = amazonService;
 	}
 	
-	
-	private byte[] bufferArray = new byte[1024];
-	private int bufferSize;  //contains the remaining characters after last /n
-	
-	private List<String> stringExtractor(byte[] newArray) throws UnsupportedEncodingException{
-		
-		
-		int i = 0;
-		List<String> lineList = new ArrayList<>();
-		while(i < newArray.length){
-			if(newArray[i] == 10){
-				byte[] remainingPart = Arrays.copyOfRange(bufferArray, 0, bufferSize);
-				byte[] newPart = Arrays.copyOfRange(newArray, 0, i);
-				
-				byte[] fullLine = Arrays.copyOf(remainingPart, remainingPart.length + newPart.length);
-				  System.arraycopy(newPart, 0, fullLine, remainingPart.length, newPart.length);
-				  
-				lineList.add(new String(fullLine, "UTF-8"));
-				  
-				bufferArray = Arrays.copyOfRange(newArray, i, newArray.length);
-				bufferSize = newArray.length - i;
-				
-				
-			}
-			
-			i++;
-		}
-		
-		return lineList;
-	}
 
 	public Beacon convertStringToBeacon(String parts[]){
 		
-		if(parts.length !=3){
+		if(parts.length != 4){
 			throw new RuntimeException("Incorrect number of parts");
 		}
 		
 		Beacon beacon = new Beacon();
-		beacon.setDeviceId(parts[1]);
+		double deviceId = Double.parseDouble(parts[2]);
+		beacon.setDeviceId(deviceId);
 		
-		double signalStrength = Double.parseDouble(parts[2]);
+		double signalStrength = Double.parseDouble(parts[3]);
 		
-		beacon.setIdPlaca(port.getPortName());
+		beacon.setIdPlaca(parts[1]);
 		beacon.setMeasurement(signalStrength);
+		
+		beacon.setNameOfDevice( UUID.randomUUID().toString());
 		
 		return beacon;
 	}

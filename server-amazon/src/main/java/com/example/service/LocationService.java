@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.geojson.GeoJsonObject;
 import org.geojson.LngLatAlt;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.example.domain.Beacon;
+import com.example.domain.BeaconId;
 import com.example.domain.LocationHistory;
 import com.example.domain.LocationSTm;
 import com.example.repository.LocationHistoryRepository;
@@ -35,7 +37,7 @@ public class LocationService {
 	private LocationSTmRepository locationSTmRepository;
 
 	public static final double TIME_LIMIT = 10;
-	public LocationHistory addDeviceLocation(String deviceId, LocationHistory location) {
+	public LocationHistory addDeviceLocation(double deviceId, LocationHistory location) {
 		return locationRepositoryHistory.save(location);
 	}
 	
@@ -49,14 +51,13 @@ public class LocationService {
 	}
 	
 	
-	public List<LocationHistory> getDeviceHistory(String deviceId,int page, int size){
+	public List<LocationHistory> getDeviceHistory(double deviceId,int page, int size){
 		final PageRequest page1 = new PageRequest(
 				page, size, Direction.DESC, "date");
 		return locationRepositoryHistory.findByDeviceId(deviceId, page1);
 
 	}
-	
-	public LocationHistory getDevicePosition(String deviceId){
+	public LocationHistory getDevicePosition(double deviceId){
 		//prelevation des coordones des balises de la bases de donnees.
 		HashMap<String, Integer> levels = new HashMap<>();
 		Map<String, LocationSTm> stmLocations = new HashMap<>();
@@ -81,6 +82,7 @@ public class LocationService {
 		}
 		double longitude = 0;
 		double latitude = 0;
+		String nameOfDevice=null;
 		if(calculBeacons.size()>=3)
 		{
 			double xStm=0;
@@ -112,7 +114,7 @@ public class LocationService {
 			{
 				String idSTM = beacon.getIdPlaca();
 				LocationSTm locationSTm = stmLocations.get(idSTM);
-				
+				nameOfDevice =beacon.getNameOfDevice();
 				xStm =locationSTm.getLocation().getLatitude();
 				yStm = locationSTm.getLocation().getLongitude();
 				zStm = locationSTm.getLevel();
@@ -141,6 +143,7 @@ public class LocationService {
 			locationHistory.setLatitude(coordX);
 			locationHistory.setLongitude(coordY);
 			locationHistory.setLevel((int)altitude);
+			locationHistory.setNameOfDevice(nameOfDevice);
 			locationRepositoryHistory.save(locationHistory);
 			System.out.println("SAVED !\n");
 			for(Beacon b : calculBeacons){
@@ -154,4 +157,20 @@ public class LocationService {
 		}
 		return null;
 	}
+	public List<BeaconId> getListOfBeacons()
+	 {
+	  List<LocationHistory> listOfLocations = locationRepositoryHistory.findAll();
+	  HashMap<Double, String> singleDevices = new HashMap<>();
+	  for(LocationHistory locationDevice : listOfLocations)
+	  {
+	   singleDevices.put(locationDevice.getDeviceId(), locationDevice.getNameOfDevice());
+	  }
+	  List<BeaconId> listOfObjectsToSend = new ArrayList<>();
+	  for(Entry<Double,String > entry : singleDevices.entrySet()) {
+	      Double key = entry.getKey();
+	      String value = entry.getValue();
+	      listOfObjectsToSend.add(new BeaconId(key, value));
+	  }
+	  return listOfObjectsToSend;
+	 }
 }

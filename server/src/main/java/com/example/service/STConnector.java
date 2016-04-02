@@ -6,9 +6,11 @@ import jssc.SerialPort;
 import jssc.SerialPortException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 //TODO Uncomment @Component when using real devices
-//@Component
+
+@Component
 public class STConnector {
 
 	@Autowired

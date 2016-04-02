@@ -2,10 +2,6 @@ package com.example.domain;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import com.example.serializer.LocalDateTimeDeserializer;
@@ -17,20 +13,22 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * Class which represents a Beacon, which is inplemented by a STM32 or an
  * Arduino
  */
-@Entity
+
 public class Beacon {
 	/**
 	 * Identification of the beacon
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+
 	private Long id;
 
 	@NotNull
-	private String deviceId;
+	private double deviceId;
 
 	@NotNull
 	private String idPlaca;
+	
+	@NotNull
+	private String nameOfDevice;
 	
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -64,11 +62,11 @@ public class Beacon {
 		this.id = id;
 	}
 
-	public String getDeviceId() {
+	public double getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(String deviceId) {
+	public void setDeviceId(double deviceId) {
 		this.deviceId = deviceId;
 	}
 
@@ -94,5 +92,14 @@ public class Beacon {
 
 	public void setMeasurement(double measurement) {
 		this.measurement = measurement;
-	}	
+	}
+
+	public String getNameOfDevice() {
+		return nameOfDevice;
+	}
+
+	public void setNameOfDevice(String nameOfDevice) {
+		this.nameOfDevice = nameOfDevice;
+	}
+	
 }

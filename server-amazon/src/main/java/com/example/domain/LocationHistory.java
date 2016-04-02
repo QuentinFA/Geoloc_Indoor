@@ -19,7 +19,7 @@ public class LocationHistory {
 	private Long id;
 	
 	@NotNull
-	private String deviceId;
+	private double deviceId;
 	
 	@NotNull
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -34,6 +34,9 @@ public class LocationHistory {
 	
 	@NotNull
 	private int level;
+	
+	@NotNull
+	private String nameOfDevice;
 	
 	public double getLatitude() {
 		return latitude;
@@ -54,10 +57,10 @@ public class LocationHistory {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getDeviceId() {
+	public double getDeviceId() {
 		return deviceId;
 	}
-	public void setDeviceId(String deviceId) {
+	public void setDeviceId(double deviceId) {
 		this.deviceId = deviceId;
 	}
 	public LocalDateTime getDate() {
@@ -72,6 +75,13 @@ public class LocationHistory {
 	public void setLevel(int level) {
 		this.level = level;
 	}
+	public String getNameOfDevice() {
+		return nameOfDevice;
+	}
+	public void setNameOfDevice(String nameOfDevice) {
+		this.nameOfDevice = nameOfDevice;
+	}
+	
 	
 	
 }

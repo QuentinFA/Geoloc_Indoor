@@ -27,8 +27,11 @@ public class Beacon {
 	private Long id;
 
 	@NotNull
-	private String deviceId;
-
+	private double deviceId;
+	
+	@NotNull
+	private String nameOfDevice;
+	
 	@NotNull
 	private String idPlaca;
 	
@@ -64,11 +67,11 @@ public class Beacon {
 		this.id = id;
 	}
 
-	public String getDeviceId() {
+	public double getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(String deviceId) {
+	public void setDeviceId(double deviceId) {
 		this.deviceId = deviceId;
 	}
 
@@ -94,5 +97,14 @@ public class Beacon {
 
 	public void setMeasurement(double measurement) {
 		this.measurement = measurement;
+	}
+
+	public String getNameOfDevice() {
+		return nameOfDevice;
+	}
+
+	public void setNameOfDevice(String nameOfDevice) {
+		this.nameOfDevice = nameOfDevice;
 	}	
+	
 }
