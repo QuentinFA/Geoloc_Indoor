@@ -44,6 +44,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import fr.imag.air.geolocindoor.domain.BeaconId;
 import fr.imag.air.geolocindoor.domain.LocationHistory;
@@ -95,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     * The DrawerLayout (the menu which opens from the left)
     */
    private DrawerLayout drawer;
+
+   /**
+    * Map to store marker with associated id
+    */
+   private Map<Double, Marker> markerMap;
 
    @Override
    protected void onCreate(Bundle savedInstanceState)
@@ -320,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    {
       Marker mMarker = new Marker(mMapView);
       mMarker.setPosition(new GeoPoint(locationHistory.getLatitude(), locationHistory.getLongitude()));
-      mMarker.setTitle(locationHistory.getDeviceId());
+      mMarker.setTitle(String.valueOf(locationHistory.getDeviceId()));
       mMarker.setSnippet(getString(R.string.floor) + locationHistory.getLevel());
 
       if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
@@ -328,6 +334,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       else
          setIcon21(mMarker);
 
+      mOverlay.add(mMarker);
+      markerMap.put(locationHistory.getDeviceId(), mMarker);
+
+      mMapView.invalidate();
+   }
+
+   public void removeMarker(double id)
+   {
+      mOverlay.remove(markerMap.get(id));
+      markerMap.remove(id);
    }
 
    /**
@@ -340,14 +356,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       {
          Marker mMarker = new Marker(mMapView);
          mMarker.setPosition(new GeoPoint(l.getLatitude(), l.getLongitude()));
-         mMarker.setTitle(l.getDeviceId());
+         mMarker.setTitle(String.valueOf(l.getDeviceId()));
          mMarker.setSnippet(getString(R.string.floor) + l.getLevel());
 
          if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
             setIcon19(mMarker);
          else
             setIcon21(mMarker);
+
+         mOverlay.add(mMarker);
+         markerMap.put(l.getDeviceId(), mMarker);
       }
+
+      mMapView.invalidate();
    }
 
    /**
@@ -420,11 +441,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                      // CheckBox have been checked, let's add the value in the table !
                      mCheckStates.put((Integer) buttonView.getTag(), isChecked);
                      // TODO Subscribe MQTT
+                     // placeNewMarker
                   }
                   else
                   {
                      mCheckStates.delete((Integer) buttonView.getTag());
                      // TODO Unsubscribe MQTT
+                     // removeMarker
                   }
                }
             });
