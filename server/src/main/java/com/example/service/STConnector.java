@@ -19,7 +19,7 @@ public class STConnector {
 
 	@PostConstruct
 	public void init(){
-		connect("COM6");
+		connect(Properties.portName);
 		
 	}
 	

@@ -37,16 +37,17 @@ public class STEventListener implements SerialPortEventListener {
 		}
 		
 		Beacon beacon = new Beacon();
-		double deviceId = Double.parseDouble(parts[2]);
-		beacon.setDeviceId(deviceId);
-		
-		double signalStrength = Double.parseDouble(parts[3]);
-		
-		beacon.setIdPlaca(parts[1]);
+		long deviceID = Long.decode("0x"+parts[1].replace(' ','0'));
+		System.out.println("ID: " +deviceID);
+		beacon.setDeviceId(deviceID);
+//		System.out.println("pendant la trauction1");
+		double signalStrength = Double.parseDouble(parts[2]);
+//		System.out.println("pendant la trauction2");
+		beacon.setIdPlaca(parts[0]);
 		beacon.setMeasurement(signalStrength);
-		
-		beacon.setNameOfDevice( UUID.randomUUID().toString());
-		
+//		System.out.println("pendant la trauction3");
+		beacon.setNameOfDevice(parts[3]);
+//		System.out.println("pendant la trauction4");
 		return beacon;
 	}
 	
@@ -72,8 +73,8 @@ public class STEventListener implements SerialPortEventListener {
 							receivedMessage = false;
 							String messageReceived = message.toString();
 							String[] parts = messageReceived.split("#");
-							for(String s : parts){
-								System.out.println(s);
+							for(int i = 0; i<parts.length;i++){
+								System.out.println(parts[i]);
 							}
 							
 							try{
