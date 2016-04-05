@@ -7,7 +7,7 @@ public class LocationHistory {
 
     private Long id;
 
-    private String deviceId;
+    private String label;
 
     private String date;
 
@@ -16,6 +16,14 @@ public class LocationHistory {
     private double longitude;
 
     private int level;
+
+    public LocationHistory(long id, String label, double latitude, double longitude)
+    {
+        this.id = id;
+        this.label = label;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     public double getLatitude() {
         return latitude;
@@ -36,11 +44,11 @@ public class LocationHistory {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getDeviceId() {
-        return deviceId;
+    public String getLabel() {
+        return label;
     }
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
+    public void setLabel(String label) {
+        this.label = label;
     }
     public String getDate() {
         return date;

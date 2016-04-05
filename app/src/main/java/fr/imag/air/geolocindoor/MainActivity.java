@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,11 +37,8 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    private MapView mMapView;
 
    /**
-    * A boolean to hide/show all markes
+    * A boolean to hide/show all markers
     */
    private boolean beaconOverlayVisible;
 
@@ -73,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    private GeoPoint hello = new GeoPoint(45.1846431, 5.7526904);
 
    /**
-    * Overlay containing all the markes
+    * Overlay containing all the markers
     */
    private FolderOverlay mOverlay;
 
@@ -88,11 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    private BeaconListAdapter bla;
 
    /**
-    * LayoutInflater (used in BeaconListAdapter)
-    */
-   private LayoutInflater mInflater;
-
-   /**
     * The DrawerLayout (the menu which opens from the left)
     */
    private DrawerLayout drawer;
@@ -100,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
    /**
     * Map to store marker with associated id
     */
-   private Map<Double, Marker> markerMap;
+   private Map<Long, Marker> markerMap;
 
    @Override
    protected void onCreate(Bundle savedInstanceState)
@@ -113,12 +104,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       // Requesting beacon list
       new HttpRequestBeacons().execute();
 
-      /*
-      bla = new BeaconListAdapter(getTestingBeaconIdList(15);
-      */
+      markerMap = new HashMap<>();
 
-      mInflater = getLayoutInflater();
       lvBeacon = (ListView) findViewById(R.id.lv_beacons);
+
+      /*
+      bla = new BeaconListAdapter(getTestingBeaconIdList(15));
+      lvBeacon.setAdapter(bla);
+      */
 
       beaconOverlayVisible = false;
 
@@ -143,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                  .show();
       }
 
-      // FloatingActionButton to show/hide all markes
+      // FloatingActionButton to show/hide all markers
       final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
       fab.setOnClickListener(new View.OnClickListener()
       {
@@ -183,6 +176,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
       mOverlay = new FolderOverlay(this);
       mMapView.getOverlays().add(mOverlay);
+
+      /* LocationHistory l1, l2, l3, l4, l5, l6, l7;
+
+      l1 = new LocationHistory(1, "Testing Beacon 1", 45.1846431, 5.7526904);
+      l2 = new LocationHistory(2, "Testing Beacon 2", 45.1845412, 5.7543592);
+      l3 = new LocationHistory(3, "Testing Beacon 3", 45.1935769, 5.7680371);
+      l4 = new LocationHistory(4, "Testing Beacon 4", 45.1841286, 5.7554077);
+      l5 = new LocationHistory(5, "Testing Beacon 5", 45.1833388, 5.7536574);
+      l6 = new LocationHistory(6, "Testing Beacon 6", 45.1857809, 5.7514625);
+      l7 = new LocationHistory(7, "Testing Beacon 7", 45.1853263, 5.758263);
+
+      placeNewMarker(l1);
+      placeNewMarker(l2);
+      placeNewMarker(l3);
+      placeNewMarker(l4);
+      placeNewMarker(l5);
+      placeNewMarker(l6);
+      placeNewMarker(l7);
+      */
    }
 
    /**
@@ -320,14 +332,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
    /**
     * Place a Marker according to a LocationHistory
-    * @param locationHistory
+    * @param lh
     */
-   public void placeNewMarker(LocationHistory locationHistory)
+   public void placeNewMarker(LocationHistory lh)
    {
       Marker mMarker = new Marker(mMapView);
-      mMarker.setPosition(new GeoPoint(locationHistory.getLatitude(), locationHistory.getLongitude()));
-      mMarker.setTitle(String.valueOf(locationHistory.getDeviceId()));
-      mMarker.setSnippet(getString(R.string.floor) + locationHistory.getLevel());
+      mMarker.setPosition(new GeoPoint(lh.getLatitude(), lh.getLongitude()));
+      mMarker.setTitle(String.valueOf(lh.getLabel()));
+      mMarker.setSnippet(getString(R.string.floor) + lh.getLevel() + "\n"
+              + "ID : " + lh.getId());
 
       if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
          setIcon19(mMarker);
@@ -335,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          setIcon21(mMarker);
 
       mOverlay.add(mMarker);
-      markerMap.put(locationHistory.getDeviceId(), mMarker);
+      markerMap.put(lh.getId(), mMarker);
 
       mMapView.invalidate();
    }
@@ -356,8 +369,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       {
          Marker mMarker = new Marker(mMapView);
          mMarker.setPosition(new GeoPoint(l.getLatitude(), l.getLongitude()));
-         mMarker.setTitle(String.valueOf(l.getDeviceId()));
-         mMarker.setSnippet(getString(R.string.floor) + l.getLevel());
+         mMarker.setTitle(String.valueOf(l.getLabel()));
+         mMarker.setSnippet(getString(R.string.floor) + l.getLevel() + "\n" + "ID : " + l.getId());
 
          if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
             setIcon19(mMarker);
@@ -365,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setIcon21(mMarker);
 
          mOverlay.add(mMarker);
-         markerMap.put(l.getDeviceId(), mMarker);
+         markerMap.put(l.getId(), mMarker);
       }
 
       mMapView.invalidate();
