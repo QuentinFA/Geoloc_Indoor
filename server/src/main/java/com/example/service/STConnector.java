@@ -19,7 +19,9 @@ public class STConnector {
 
 	@PostConstruct
 	public void init(){
-		connect(Properties.portName);
+		String portName = Properties.portName;
+		System.out.println("Connecting to port " + portName);
+		connect(portName);
 		
 	}
 	
