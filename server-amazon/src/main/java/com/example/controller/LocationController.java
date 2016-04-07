@@ -53,6 +53,10 @@ public class LocationController {
 		return locationService.addLocationSTm(locationSTm);
 	}
 
+	@RequestMapping(value = "/{STmId}/deleteSTm", method = RequestMethod.DELETE)
+	public void deleteSTmLocation(@PathVariable String STmId) {
+		 locationService.deleteStm(STmId);
+	}
 	@RequestMapping(value = "/{deviceId}/history", method = RequestMethod.GET)
 	public List<LocationHistory> getDevicePositionHistory(
 			@PathVariable double deviceId,
@@ -89,5 +93,9 @@ public class LocationController {
 	@RequestMapping(value = "/listBeacons", method = RequestMethod.GET)
 	public List<BeaconId> getListOfBeacons() {
 		return locationService.getListOfBeacons();
+	}
+	@RequestMapping(value = "/beacons", method = RequestMethod.GET)
+	public List<Beacon> getBeacons() {
+		return locationService.getBeacons();
 	}
 }

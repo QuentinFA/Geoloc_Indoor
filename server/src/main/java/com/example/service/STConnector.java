@@ -20,9 +20,11 @@ public class STConnector {
 	@PostConstruct
 	public void init(){
 		String portName = Properties.portName;
+		String portName2 = Properties.portName2;
 		System.out.println("Connecting to port " + portName);
 		connect(portName);
-		
+		if (portName2!=null)
+			connect(portName2);
 	}
 	
 	public boolean connect(String portName) {

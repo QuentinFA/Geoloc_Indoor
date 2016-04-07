@@ -157,6 +157,11 @@ public class LocationService {
 		}
 		return null;
 	}
+	public void deleteStm(String idStm)
+	{
+		LocationSTm location = locationSTmRepository.findByidSTm(idStm);
+		locationSTmRepository.delete(location);
+	}
 	public List<BeaconId> getListOfBeacons()
 	 {
 	  List<LocationHistory> listOfLocations = locationRepositoryHistory.findAll();
@@ -173,4 +178,8 @@ public class LocationService {
 	  }
 	  return listOfObjectsToSend;
 	 }
+	public List<Beacon> getBeacons()
+	{
+		return locationRepository.findAll();
+	}
 }
